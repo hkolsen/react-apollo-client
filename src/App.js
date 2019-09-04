@@ -1,26 +1,66 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from "react";
+import ApolloClient from "apollo-boost";
+import { ApolloProvider } from "react-apollo";
+import Recipes from "./Recipes";
+import AddRecipe from "./AddRecipe";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+const resolvers = {
+  Recipe: {
+    isStarred: parent => {
+      const starredRecipes =
+        JSON.parse(localStorage.getItem("starredRecipes")) || [];
+      return starredRecipes.includes(parent.id);
+    }
+  },
+  Mutation: {
+    updateRecipeStarred: (_, variables) => {
+      const starredRecipes =
+        JSON.parse(localStorage.getItem("starredRecipes")) || [];
+      if (variables.isStarred) {
+        localStorage.setItem(
+          "starredRecipes",
+          JSON.stringify(starredRecipes.concat([variables.id]))
+        );
+      } else {
+        localStorage.setItem(
+          "starredRecipes",
+          JSON.stringify(
+            starredRecipes.filter(recipeId => recipeId !== variables.id)
+          )
+        );
+      }
+      return {
+        __typename: "Recipe",
+        isStarred: variables.isStarred
+      };
+    }
+  }
+}
+
+const client = new ApolloClient({
+  uri: "http://localhost:4000/",
+  clientState: {
+    resolvers
+  }
+});
+
+class App extends Component {
+  render() {
+    return (
+      <ApolloProvider client={client}>
+        <AddRecipe />
+        <hr
+          style={{
+            marginTop: "1.5rem",
+            border: 0,
+            height: 1,
+            background: "#ccc"
+          }}
+        />
+        <Recipes />
+      </ApolloProvider>
+    );
+  }
 }
 
 export default App;

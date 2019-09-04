@@ -137,3 +137,10 @@ input[type="submit"][disabled]:hover {
   background: transparent;
   box-shadow: 0 0 0 2px #66666666;
 }
+
+hr {
+  margin-top: 1.5rem;
+  border: 0;
+  height: 1px;
+  background: #cccccc;
+}

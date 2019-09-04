@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import ApolloClient from "apollo-boost";
 import { ApolloProvider } from "react-apollo";
-import Recipes from "./Recipes";
-import AddRecipe from "./AddRecipe";
+import { Recipes } from "./Recipes";
+import { AddRecipe } from "./AddRecipe";
 
 const resolvers = {
   Recipe: {
@@ -49,14 +49,7 @@ class App extends Component {
     return (
       <ApolloProvider client={client}>
         <AddRecipe />
-        <hr
-          style={{
-            marginTop: "1.5rem",
-            border: 0,
-            height: 1,
-            background: "#ccc"
-          }}
-        />
+        <hr />
         <Recipes />
       </ApolloProvider>
     );
